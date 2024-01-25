@@ -5,16 +5,22 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["WinterExam23-24/WinterExam23-24.csproj", "WinterExam23-24/"]
-RUN dotnet restore "WinterExam23-24/WinterExam23-24.csproj"
+COPY ["MainApi/MainApi.csproj", "MainApi/"]
+COPY ["Database/Database.csproj", "Database/"]
+COPY ["Contracts/Contracts.csproj", "Contracts/"]
+COPY ["Common/Common.csproj", "Common/"]
+COPY ["Utils/Utils.csproj", "Utils/"]
+COPY ["DatabaseServices/DatabaseServices.csproj", "DatabaseServices/"]
+COPY ["Models/Models.csproj", "Models/"]
+RUN dotnet restore "MainApi/MainApi.csproj"
 COPY . .
-WORKDIR "/src/WinterExam23-24"
-RUN dotnet build "WinterExam23-24.csproj" -c Release -o /app/build
+WORKDIR "/src/MainApi"
+RUN dotnet build "MainApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "WinterExam23-24.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "MainApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "WinterExam23-24.dll"]
+ENTRYPOINT ["dotnet", "MainApi.dll"]

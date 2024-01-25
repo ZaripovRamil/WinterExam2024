@@ -1,0 +1,25 @@
+﻿version: '3'
+
+services:
+  postgres:
+    image: postgres:alpine
+    hostname: postgres
+    env_file:
+      - Backend/.postgres-secrets
+    volumes:
+      - ~/apps/Backend/postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  mainapi:
+    image: mainapi
+    hostname: mainapi
+    build:
+      context: Backend
+      dockerfile: MainApi/Dockerfile
+    env_file:
+      - Backend/.secrets
+      - Backend/.kestrel-conf
+    ports:
+      - "5554:443"
+    working_dir: "/app"
+  
