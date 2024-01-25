@@ -18,11 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CI-CD", "CI-CD", "{1E30585D-EBE8-46FB-A6BF-DFEDDCC4F661}"
 	ProjectSection(SolutionItems) = preProject
-		.dockerignore = .dockerignore
-		.kestrel-conf = .kestrel-conf
-		.postgres-secrets = .postgres-secrets
-		.secrets = .secrets
-		local.secrets = local.secrets
 		..\docker-compose.yml = ..\docker-compose.yml
 	EndProjectSection
 EndProject
