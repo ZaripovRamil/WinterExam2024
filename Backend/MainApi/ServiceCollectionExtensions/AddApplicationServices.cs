@@ -1,3 +1,4 @@
+using Models.Configuration;
 using Utils.ServiceCollectionExtensions;
 using WinterExam24.Features.Auth;
 
@@ -9,6 +10,7 @@ public static class AddApplicationServicesExtensions
         IConfiguration configuration)
     {
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.Configure<JwtTokenSettings>(configuration.GetSection("JWTTokenSettings"));
 
         services.AddIdentity(true);
         services.AddSwaggerWithAuthorization();
