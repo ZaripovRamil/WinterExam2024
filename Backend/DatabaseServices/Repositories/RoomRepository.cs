@@ -12,9 +12,6 @@ public interface IRoomRepository : IRepository<Room>
     public Task UpdatePlayers(Guid roomId, List<User> players);
 }
 
-public interface ISingletonRoomRepository : IRepository<Room>
-{
-}
 public class RoomRepository : Repository, IRoomRepository
 {
     private readonly IMapper _mapper;

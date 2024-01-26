@@ -11,6 +11,7 @@ using WinterExam24.ConfigurationExtensions;
 using WinterExam24.Features.Moves;
 using WinterExam24.Hubs;
 using WinterExam24.ServiceCollectionExtensions;
+using WinterExam24.Services;
 using IMongoDatabase = Database.IMongoDatabase;
 
 var builder = WebApplication.CreateBuilder(args);
