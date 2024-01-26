@@ -4,9 +4,9 @@ namespace WinterExam24.Services;
 
 public class RoomCleaner : BackgroundService
 {
-    private readonly IRoomRepository _rooms;
+    private readonly ISingletonRoomRepository _rooms;
 
-    public RoomCleaner(IRoomRepository rooms)
+    public RoomCleaner(ISingletonRoomRepository rooms)
     {
         _rooms = rooms;
     }

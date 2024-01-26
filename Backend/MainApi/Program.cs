@@ -11,7 +11,6 @@ using WinterExam24.ConfigurationExtensions;
 using WinterExam24.Features.Moves;
 using WinterExam24.Hubs;
 using WinterExam24.ServiceCollectionExtensions;
-using WinterExam24.Services;
 using IMongoDatabase = Database.IMongoDatabase;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,7 +50,7 @@ builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient("mongodb://host
 builder.Services.AddSingleton<IMongoDatabase, MongoDatabase>();
 builder.Services.AddSingleton(config.CreateMapper());
 builder.Services.AddApplicationServices(builder.Configuration);
-builder.Services.AddHostedService<RoomCleaner>();
+//builder.Services.AddHostedService<RoomCleaner>();
 builder.Services.AddRequestHandlers();
 
 builder.Services.AddControllers();
