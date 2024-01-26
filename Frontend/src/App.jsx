@@ -8,6 +8,7 @@ import { MainPage } from "./MainPage/MainPage";
 import GoAwayPage from "./GoAwayPage";
 import { GamePage } from "./GamePage/GamePage";
 import { RaitingPage } from "./RaitingPage/RaitingPage";
+import { NotFoundPage } from "./NotFoundPage/NotFoundPage";
 
 function App() {
   return (
@@ -33,6 +34,10 @@ function App() {
           <Route
             path="/raiting"
             element={<PageBuilder component={<RaitingPage />} />}
+          />
+          <Route
+            path="/notFound"
+            element={<PageBuilder component={<NotFoundPage />} />}
           />
           <Route path="*" element={<GoAwayPage />} />
         </Routes>

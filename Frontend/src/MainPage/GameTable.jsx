@@ -53,8 +53,12 @@ const GameTable = () => {
         setPage((prevPage) => prevPage + 1);
       })
       .catch((err) => {
+        console.log("aaaa", err);
         if (err.response.status === 401) {
           navigate("/authorize");
+        }
+        if (err.response.status === 404) {
+          navigate("/notFound");
         }
       })
       .finally(setIsLoading(false));
