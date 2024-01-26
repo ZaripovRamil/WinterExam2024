@@ -31,9 +31,9 @@ public class RoomRepository : Repository, IRoomRepository
         return _mapper.Map<RoomDbo?, Room?>(dbo);
     }
 
-    public IEnumerable<Room> GetAll()
+    public Task<IEnumerable<Room>> GetAll()
     {
-        return _mapper.Map<IEnumerable<RoomDbo>, IEnumerable<Room>>(DbContext.Rooms);
+        return Task.FromResult(_mapper.Map<IEnumerable<RoomDbo>, IEnumerable<Room>>(DbContext.Rooms));
     }
 
     public async Task DeleteAsync(Room room)

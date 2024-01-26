@@ -3,13 +3,16 @@ using AutoMapper;
 using Common;
 using Contracts.Dbo;
 using Contracts.Dto;
+using Database;
 using Models;
+using MongoDB.Driver;
 using Utils.CQRS;
 using Utils.WebApplicationExtensions;
 using WinterExam24.ConfigurationExtensions;
 using WinterExam24.Features.Auth.SignUp;
 using WinterExam24.Features.Rating.Get;
 using WinterExam24.ServiceCollectionExtensions;
+using IMongoDatabase = Database.IMongoDatabase;
 using ResultDto = WinterExam24.Features.Auth.SignUp.ResultDto;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +40,9 @@ var config = new MapperConfiguration(cfg
                 opt.MapFrom(dbo => dbo.GameState.Deserialize<GameState>(
                     new JsonSerializerOptions {PropertyNameCaseInsensitive = true})));
 });
+
+builder.Services.AddSingleton<IMongoClient>(x => new MongoClient("mongodb://localhost:27017"));
+builder.Services.AddSingleton<IMongoDatabase, MongoDatabase>();
 builder.Services.AddSingleton(config.CreateMapper());
 builder.Services.AddApplicationServices(builder.Configuration);
 

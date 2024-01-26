@@ -1,15 +1,16 @@
 
 using Database;
+using Models;
 
 namespace DatabaseServices.Repositories;
 
 public interface IRepository<T>
 {
-    Task AddAsync(T room);
+    Task AddAsync(T item);
     Task<T?> GetAsync(Guid id);
-    IEnumerable<T> GetAll();
-    Task DeleteAsync(T room);
-    Task UpdateAsync(T room);
+    Task<IEnumerable<T>> GetAll();
+    Task DeleteAsync(T item);
+    Task UpdateAsync(T item);
 }
 
 public abstract class Repository

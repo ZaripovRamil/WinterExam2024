@@ -17,18 +17,18 @@ public class QueryHandler : IQueryHandler<Query, ResultDto>
         _mapper = mapper;
     }
 
-    public Task<Result<ResultDto>> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<Result<ResultDto>> Handle(Query request, CancellationToken cancellationToken)
     {
         if (request.Size == 0 || request.Page <= 0)
-            return Task.FromResult(new Result<ResultDto>(new []{"incorrect parameters"}));
-        var rooms = _rooms.GetAll().OrderBy(room => room.Players.Count)
+            return new Result<ResultDto>("incorrect parameters");
+        var rooms = (await _rooms.GetAll()).OrderBy(room => room.Players.Count)
             .Skip((request.Page - 1) * request.Size)
             .Take(request.Size)
             .ToArray();
-        if(rooms.Length == 0)return Task.FromResult(new Result<ResultDto>(new []{"incorrect parameters"}));
-        return Task.FromResult(new Result<ResultDto>(new ResultDto
+        if(rooms.Length == 0)return new Result<ResultDto>("incorrect parameters");
+        return new Result<ResultDto>(new ResultDto
         {
             Rooms = _mapper.Map<Room[], RoomDto[]>(rooms)
-        }));
+        });
     }
 }

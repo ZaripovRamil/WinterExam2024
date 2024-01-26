@@ -17,12 +17,12 @@ public class QueryHandler : IQueryHandler<Query, ResultDto>
         _mapper = mapper;
     }
 
-    public Task<Result<ResultDto>> Handle(Query request, CancellationToken cancellationToken)
+    public async Task<Result<ResultDto>> Handle(Query request, CancellationToken cancellationToken)
     {
-        return Task.FromResult(new Result<ResultDto>(
+        return new Result<ResultDto>(
             new ResultDto
             {
-                Players =_mapper.Map<User[], UserDto[]>(_users.GetAll().OrderByDescending(user => user.Rating).ToArray())
-            }));
+                Players =_mapper.Map<User[], UserDto[]>((await _users.GetAll()).OrderByDescending(user => user.Rating).ToArray())
+            });
     }
 }

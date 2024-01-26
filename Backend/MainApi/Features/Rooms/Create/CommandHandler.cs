@@ -24,6 +24,6 @@ public class CommandHandler : ICommandHandler<Command, ResultDto>
             Id = Guid.NewGuid(), 
             GameState = new GameState()};
         await _rooms.AddAsync(room);
-        return new Result<ResultDto>(new ResultDto() { Id = room.Id });
+        return new Result<ResultDto>(new ResultDto() { GameId = room.Id });
     }
 }
