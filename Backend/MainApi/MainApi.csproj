@@ -32,9 +32,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Games\Create\" />
-      <Folder Include="Features\Games\GetList\" />
-      <Folder Include="Features\Rating\Get\" />
+      <Folder Include="Features\Rooms\Create\" />
+      <Folder Include="Features\Rooms\GetList\" />
     </ItemGroup>
 
 </Project>
