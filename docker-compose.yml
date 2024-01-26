@@ -33,3 +33,17 @@
     restart: always
     ports:
       - "5643:5643"
+        
+        
+  users_front:
+    image: users_front
+    hostname: users_front
+    build:
+      context: Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - mainapi

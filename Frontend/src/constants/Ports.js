@@ -1,5 +1,5 @@
 class Ports {
-  static WebApi = 7099;
+  static WebApi = 5200;
 }
 
 export default Ports;
