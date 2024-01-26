@@ -8,6 +8,8 @@ namespace DatabaseServices.Repositories;
 
 public interface IRoomRepository : IRepository<Room>
 {
+    public Task UpdateGameState(Guid roomId, GameState gameState);
+    public Task UpdatePlayers(Guid roomId, List<User> players);
 }
 public class RoomRepository : Repository, IRoomRepository
 {

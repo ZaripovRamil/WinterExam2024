@@ -4,6 +4,6 @@ namespace Models;
 
 public class GameState
 {
-    public Dictionary<User, Move> Moves { get; set; }
-    public User Winner { get; set; }
+    public Dictionary<string, Move> Moves { get; set; } = new();
+    public string WinnerUsername { get; set; } = "";
 }

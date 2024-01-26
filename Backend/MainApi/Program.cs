@@ -1,6 +1,5 @@
 using System.Text.Json;
 using AutoMapper;
-using Common;
 using Contracts.Dbo;
 using Contracts.Dto;
 using Database;
@@ -10,7 +9,9 @@ using Utils.CQRS;
 using Utils.WebApplicationExtensions;
 using WinterExam24.ConfigurationExtensions;
 using WinterExam24.Features.Auth.SignUp;
+using WinterExam24.Features.Moves;
 using WinterExam24.Features.Rating.Get;
+using WinterExam24.Hubs;
 using WinterExam24.ServiceCollectionExtensions;
 using IMongoDatabase = Database.IMongoDatabase;
 using ResultDto = WinterExam24.Features.Auth.SignUp.ResultDto;
@@ -19,16 +20,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 AddEnvironmentFilesExtension.AddEnvironmentFiles();
 builder.Configuration.AddEnvironmentVariables();
+builder.Services.AddSignalR();   
 var config = new MapperConfiguration(cfg
     =>
 {
     cfg.CreateMap<User, UserDbo>().ReverseMap();
     cfg.CreateMap<User, UserDto>();
-    cfg.CreateMap<GameState, GameStateDto>()
-        .ForMember(gs => gs.Moves,
-            opt =>
-                opt.MapFrom(gs => gs.Moves.Select(kvp => new KeyValuePair<string, Move>())
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)));
+    cfg.CreateMap<GameState, GameStateDto>();
     cfg.CreateMap<Room, RoomDto>();
     cfg.CreateMap<Room, RoomDbo>()
         .ForMember(dbo => dbo.GameState, 
@@ -40,8 +38,8 @@ var config = new MapperConfiguration(cfg
                 opt.MapFrom(dbo => dbo.GameState.Deserialize<GameState>(
                     new JsonSerializerOptions {PropertyNameCaseInsensitive = true})));
 });
-
-builder.Services.AddSingleton<IMongoClient>(x => new MongoClient("mongodb://localhost:27017"));
+builder.Services.AddScoped<IGameResultCalculator, GameResultCalculator>();
+builder.Services.AddSingleton<IMongoClient>(x => new MongoClient("mongodb://host.docker.internal:27017"));
 builder.Services.AddSingleton<IMongoDatabase, MongoDatabase>();
 builder.Services.AddSingleton(config.CreateMapper());
 builder.Services.AddApplicationServices(builder.Configuration);
@@ -65,17 +63,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
     app.ApplyMigrations();
-}
+
 
 app.UseCors();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHub<MainHub>("/room");
 app.Run();

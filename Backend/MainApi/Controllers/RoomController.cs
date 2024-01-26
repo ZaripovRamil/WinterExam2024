@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Utils.CQRS;
 using WinterExam24.Features.Rooms.Create;
 using WinterExam24.Features.Rooms.GetList;
+using InputDto = WinterExam24.Features.Rooms.Create.InputDto;
 using ResultDto = WinterExam24.Features.Rooms.GetList.ResultDto;
 
 namespace WinterExam24.Controllers;
