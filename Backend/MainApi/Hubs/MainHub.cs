@@ -1,6 +1,8 @@
 using AutoMapper;
+using Contracts.Dbo;
 using Contracts.Dto;
 using DatabaseServices.Repositories;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Models;
@@ -11,18 +13,20 @@ namespace WinterExam24.Hubs;
 [Authorize]
 public class MainHub : Hub
 {
-    public MainHub(IRoomRepository roomRepository, IMapper mapper, IUserRepository users, IGameResultCalculator gameResultCalculator)
+    public MainHub(IRoomRepository roomRepository, IMapper mapper, IUserRepository users, IGameResultCalculator gameResultCalculator, IBus bus)
     {
         _rooms = roomRepository;
         _mapper = mapper;
         _users = users;
         _gameResultCalculator = gameResultCalculator;
+        _bus = bus;
     }
 
     private readonly IUserRepository _users;
     private readonly IRoomRepository _rooms;
     private readonly IMapper _mapper;
-    private IGameResultCalculator _gameResultCalculator;
+    private readonly IGameResultCalculator _gameResultCalculator;
+    private readonly IBus _bus;
     public async Task Enter(string username, string groupName)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
@@ -76,7 +80,20 @@ public class MainHub : Hub
         if (room.GameState.Moves.Count == 2)
         {
             _gameResultCalculator.UpdateRoomWithGameResult(room);
+            if(room.GameState.WinnerUsername == "")
+                foreach (var player in room.Players)
+                {
+                    await _bus.Publish(new UserRatingDbo() { UserId = player.Id, Rating = player.Rating + 1 });
+                }
+            else 
+                foreach (var player in room.Players)
+                {
+                    if(player.UserName == room.GameState.WinnerUsername)
+                        await _bus.Publish(new UserRatingDbo { UserId = player.Id, Rating = player.Rating + 3 });
+                    else await _bus.Publish(new UserRatingDbo { UserId = player.Id, Rating = player.Rating + - 1 });
+                }
             await Clients.Group(groupName).SendAsync("ReceiveChatMessage", _mapper.Map<Room,RoomDto>(room));
+            room.GameState = new GameState();
         }
             
     }
