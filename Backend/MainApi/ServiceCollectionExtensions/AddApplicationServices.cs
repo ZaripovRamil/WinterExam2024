@@ -13,7 +13,7 @@ public static class AddApplicationServicesExtensions
         services.AddIdentity(true);
         services.AddSwaggerWithAuthorization();
         services.AddAllCors();
-
+        services.AddJwtAuthorization(configuration);
         services.AddRepositories(configuration);
     }
 }
