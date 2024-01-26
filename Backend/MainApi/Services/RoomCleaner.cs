@@ -4,22 +4,23 @@ namespace WinterExam24.Services;
 
 public class RoomCleaner : BackgroundService
 {
-    private readonly ISingletonRoomRepository _rooms;
+    private readonly IServiceProvider _serviceProvider;
 
-    public RoomCleaner(ISingletonRoomRepository rooms)
+    public RoomCleaner(IServiceProvider serviceProvider)
     {
-        _rooms = rooms;
+        _serviceProvider = serviceProvider;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        var rooms = _serviceProvider.GetRequiredService<IRoomRepository>();
         while (true)
         {
-            foreach (var room in await _rooms.GetAll())
+            foreach (var room in await rooms.GetAll())
             {
                 if (room.Players.Count == 0)
                 {
-                    await _rooms.DeleteAsync(room);
+                    await rooms.DeleteAsync(room);
                 }
             }
             

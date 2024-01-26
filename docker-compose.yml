@@ -8,6 +8,8 @@
       - "5200:8080"
     depends_on:
       - postgres
+      - mongo
+      - rabbitmq
   
   postgres:
     image: postgres:alpine
