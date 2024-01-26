@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+}
+
+html,
+body {
+  background: #f9f7eb;
+  height: 100%;
+  font-family: "Klee One-Regular", Helvetica;
+  font-weight: 400;
+}
+
+body {
+  padding: 0 30px 0 30px;
+}
+
+main {
+  padding-top: 30px;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+.footer {
+  flex: 0 0 auto;
+}
+
+a {
+  text-decoration: none;
+  color: #000000;
+}
+
+button {
+  font-family: "Klee One-Regular";
+}

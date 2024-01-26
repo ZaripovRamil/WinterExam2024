@@ -1,0 +1,115 @@
+.auth-form ::placeholder,
+.register-form ::placeholder {
+  color: #838383;
+  font-size: 20px;
+  font-family: "Klee One-Regular";
+}
+
+.auth-form,
+.register-form {
+  width: 537px;
+  /* height: 540px; */
+  /* background: rgba(19, 19, 22, 0.3); */
+  /* border-radius: 7px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* font-family: "Libre Baskerville";
+  color: #fecb6899;
+  font-style: normal;
+  letter-spacing: 0.035em; */
+  align-self: center;
+}
+
+/* .register-form {
+  height: 620px;
+} */
+
+.auth-header,
+.register-header {
+  font-size: 30px;
+  margin-bottom: 50px;
+}
+
+.auth-header-main,
+.register-header-main {
+  color: #000000;
+  display: inline;
+}
+
+.auth-header-link,
+.register-header-link {
+  color: #838383;
+}
+
+.credentials-input {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.error-text {
+  color: rgba(255, 69, 69, 0.9);
+  padding: 0px 5px 9px 5px;
+}
+
+.error-name {
+  opacity: 1;
+}
+
+.error-login {
+  opacity: 1;
+}
+
+.error-email {
+  opacity: 1;
+}
+
+.error-password {
+  opacity: 1;
+}
+
+.auth-form input,
+.register-form input {
+  background: none;
+  border-color: #837a7a;
+  border-radius: 8px;
+  color: #000000;
+  font-size: 22px;
+  height: 46px;
+  padding: 5px;
+  margin-bottom: 5px;
+  min-width: 310px;
+}
+
+.submit-btn input[type="submit"] {
+  height: 71px;
+  border: 1px solid;
+  border-color: #000000;
+  border-radius: 8px;
+  color: #000000;
+  width: 238px;
+  font-family: "Klee One-Regular";
+}
+
+/* .auth-form input:hover,
+.register-form input:hover {
+  background: rgba(87, 87, 94, 0.78);
+} */
+
+/* .auth-form input:focus,
+.register-form input:focus {
+  outline: none;
+} */
+
+.auth-form a,
+.register-form a {
+  color: #837a7a;
+}
+
+.auth-form a:visited,
+.register-form a:visited {
+  color: #000000;
+}

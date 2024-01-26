@@ -1,0 +1,7 @@
+.main-auth {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* height: calc(100vh - 130px); */
+  /* min-height: 540px А у; */
+}

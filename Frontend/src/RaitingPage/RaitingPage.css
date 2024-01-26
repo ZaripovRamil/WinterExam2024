@@ -1,0 +1,47 @@
+.main-raiting {
+  width: calc(100% - 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  /* padding: 0 30px; */
+}
+
+.main-raiting table {
+  border: 1px solid #837a7a;
+  font-size: 20px;
+  margin-bottom: 20px;
+  min-width: 400px;
+}
+
+.main-raiting th {
+  border-bottom: 1px solid #837a7a;
+  padding: 10px;
+}
+
+.main-raiting td {
+  text-align: center;
+  border-bottom: 1px solid #837a7a;
+  padding: 5px;
+}
+
+.main-raiting tr {
+  vertical-align: bottom;
+}
+
+.main-raiting tr:last-child td {
+  border-bottom: none;
+}
+.raitingTable {
+  align-self: center;
+}
+
+.raingHeader {
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.back:hover {
+  cursor: pointer;
+}

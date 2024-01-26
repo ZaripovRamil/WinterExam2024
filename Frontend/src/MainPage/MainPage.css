@@ -1,0 +1,165 @@
+.main-main {
+  width: calc(100% - 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 30px;
+}
+
+.createGameBtn,
+.raitingBtn {
+  color: #000000;
+  font-size: 16px;
+  height: 65px;
+  width: 212px;
+  border-color: #000000;
+  border-radius: 8px;
+  background-color: transparent;
+}
+
+.createGameBtn:hover,
+.raitingBtn:hover {
+  cursor: pointer;
+}
+
+.createGameBtn {
+  margin-right: 15px;
+}
+
+.buttons {
+  margin-bottom: 50px;
+  align-self: center;
+}
+
+table {
+  /* border: 2px solid forestgreen;
+    width: 800px;
+    height: 200px; */
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+th {
+  border-bottom: 1px solid #837a7a;
+  padding: 10px;
+}
+
+td {
+  text-align: center;
+  border-bottom: 1px solid #837a7a;
+  padding: 5px;
+}
+
+tr {
+  vertical-align: bottom;
+}
+
+.gameTable {
+  align-self: center;
+}
+
+.gameTable td:last-child,
+.gameTable th:last-child {
+  border-bottom: none;
+}
+
+.paginationButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.paginationButtons button {
+  color: #000000;
+  font-size: 14px;
+  height: 40px;
+  width: 100px;
+  border-color: #000000;
+  border-radius: 8px;
+  background-color: transparent;
+}
+
+.paginationButtons button:hover {
+  cursor: pointer;
+}
+
+/* Popup style */
+.popup-box {
+  position: fixed;
+  background: #00000050;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.box {
+  position: relative;
+  width: 650px;
+  margin: 0 auto;
+  height: 200px;
+  /* height: auto; */
+  /* max-height: 70vh; */
+  /* margin-top: calc(100vh - 85vh - 20px); */
+  background: #fff;
+  border-radius: 4px;
+  padding: 20px;
+  border: 1px solid #999;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.close-icon {
+  /* content: "x"; */
+  cursor: pointer;
+  /* position: fixed; */
+  /* right: calc(15% - 30px);
+  top: calc(100vh - 85vh - 33px); */
+  background: #ededed;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  line-height: 20px;
+  text-align: center;
+  border: 1px solid #999;
+  font-size: 20px;
+}
+
+.create-form ::placeholder {
+  color: #838383;
+  font-size: 20px;
+  font-family: "Klee One-Regular";
+}
+
+.create-form {
+  width: 537px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+}
+
+.create-form input {
+  background: none;
+  border-color: #837a7a;
+  border-radius: 8px;
+  color: #000000;
+  font-size: 22px;
+  height: 46px;
+  padding: 5px;
+  margin-bottom: 5px;
+  min-width: 310px;
+}
+
+.submit-btn input[type="submit"] {
+  height: 71px;
+  border: 1px solid;
+  border-color: #000000;
+  border-radius: 8px;
+  color: #000000;
+  width: 238px;
+  font-family: "Klee One-Regular";
+}

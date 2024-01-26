@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&family=Libre+Baskerville:wght@400;700&display=swap");
+
+@font-face {
+  font-family: "Klee One-Regular";
+  src: local("Klee One-Regular"),
+    url("./fonts/KleeOne-Regular.ttf") format("truetype");
+  font-weight: 500;
+}
+
+.main-page {
+  width: calc(100% - 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 30px;
+}

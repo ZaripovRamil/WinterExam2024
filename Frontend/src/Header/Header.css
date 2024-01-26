@@ -1,0 +1,37 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 155px;
+}
+.header-logo {
+  font-size: 30px;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 30px;
+  width: 75%;
+  font-size: 22px;
+}
+
+.link:hover {
+  color: aliceblue;
+}
+
+@media (max-width: 615px) {
+  .header {
+    padding: 0 10px;
+  }
+}
+@media (max-width: 500px) {
+  .header-logo a {
+    display: none;
+  }
+  .header-nav {
+    width: 100%;
+    gap: 10px;
+  }
+}
