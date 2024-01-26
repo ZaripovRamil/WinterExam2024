@@ -2,7 +2,6 @@ using Contracts.Dbo;
 using Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Models;
 
 namespace Utils.ServiceCollectionExtensions;
 

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Utils.CQRS;
 using WinterExam24.Features.Auth.SignIn;

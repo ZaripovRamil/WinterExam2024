@@ -19,6 +19,6 @@ public class RatingController: Controller
     [HttpGet]
     public async Task<IActionResult> GetRating()
     {
-        return Ok((await _getRatingHandler.Handle(new Query(), new CancellationToken())).Value);
+        return Ok((await _getRatingHandler.Handle(new Query(), new CancellationToken())).Value!.Players);
     }
 }

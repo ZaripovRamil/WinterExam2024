@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 using Contracts.Dbo;
 using Database;
@@ -8,6 +9,7 @@ namespace DatabaseServices.Repositories;
 
 public interface IUserRepository : IRepository<User>
 {
+    public Task<User?> FindByClaimAsync(ClaimsPrincipal user);
     public Task<SignInResult> SignInAsync(string username, string password);
     public Task<IdentityResult> CreateAsync(User user, string password);
     public Task<User?> FindByNameAsync(string username);
@@ -27,14 +29,14 @@ public class UserRepository : Repository, IUserRepository
         _signInManager = signInManager;
     }
 
-    public async Task AddAsync(User user)
+    public async Task AddAsync(User room)
     {
         throw new NotImplementedException();
     }
 
-    public Task<User?> GetAsync(Guid id)
+    public async Task<User?> GetAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return _mapper.Map<UserDbo?, User?>(await DbContext.Users.FindAsync(id));
     }
 
     public IEnumerable<User> GetAll()
@@ -42,12 +44,12 @@ public class UserRepository : Repository, IUserRepository
         return _mapper.Map<UserDbo[], IEnumerable<User>>(_userManager.Users.ToArray());
     }
 
-    public Task DeleteAsync(User item)
+    public Task DeleteAsync(User room)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(User item)
+    public Task UpdateAsync(User room)
     {
         throw new NotImplementedException();
     }
@@ -61,6 +63,11 @@ public class UserRepository : Repository, IUserRepository
     public async Task<User?> FindByNameAsync(string username)
     {
         return _mapper.Map<UserDbo?, User?>(await _userManager.FindByNameAsync(username));
+    }
+
+    public async Task<User?> FindByClaimAsync(ClaimsPrincipal claim)
+    {
+        return _mapper.Map<UserDbo?, User?>(await _userManager.GetUserAsync(claim));
     }
 
     public async Task<SignInResult> SignInAsync(string username, string password)

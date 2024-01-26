@@ -31,9 +31,4 @@
       </Content>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Features\Rooms\Create\" />
-      <Folder Include="Features\Rooms\GetList\" />
-    </ItemGroup>
-
 </Project>
