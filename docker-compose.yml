@@ -2,10 +2,10 @@
   mainapi:
     image: mainapi
     build:
-      context: .
-      dockerfile: Backend/MainApi/Dockerfile
+      context: Backend
+      dockerfile: MainApi/Dockerfile
     ports:
-      - "5200:80"
+      - "5200:8080"
     depends_on:
       - postgres
   
@@ -25,3 +25,9 @@
       - ~/apps/Spotify/mongo/data:/data/db
     ports:
       - "27017:27017"
+  rabbitmq:
+    image: rabbitmq:3-alpine
+    hostname: rabbitmq
+    restart: always
+    ports:
+      - "5643:5643"
