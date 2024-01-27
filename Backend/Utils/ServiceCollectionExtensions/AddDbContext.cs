@@ -10,7 +10,7 @@ public static class AddDbContextExtension
     public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql("Server=localhost;Database=someDatabase;Port=5432;username=postgres;SSLMode=Prefer",
+            options.UseNpgsql("Host=postgres;Username=adminuser;Password=adminpassword;Database=someDatabase",
                 b => b.MigrationsAssembly("Database")));
         
         return services;
