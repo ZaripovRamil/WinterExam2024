@@ -38,7 +38,7 @@ export const GamePage = () => {
   useEffect(() => {
     const authToken = localStorage.getItem("access-token") ?? "";
     const newConnection = new HubConnectionBuilder()
-      .withUrl(`https://localhost:${Ports.WebApi}/room`, {
+      .withUrl(`http://localhost:${Ports.WebApi}/room`, {
         transport: HttpTransportType.WebSockets,
         skipNegotiation: true,
         accessTokenFactory: () => `${authToken}`,
@@ -68,7 +68,7 @@ export const GamePage = () => {
         .catch((e) => console.log("Connection failed: ", e));
 
       connection.on("Receive", (roomDto) => {
-        console.log(roomDto);
+        console.log("receive", roomDto);
         if (validateStatusCode(roomDto.statusCode)) {
           changeStates(roomDto);
           setRoom(roomDto);
@@ -104,7 +104,7 @@ export const GamePage = () => {
   useEffect(() => {}, [isJoinError, room]);
 
   useEffect(() => {
-    if (connection && connection.connectionStarted) {
+    if (connection && connection._connectionStarted) {
       try {
         connection.send("ExitTheGame", gameId);
       } catch (e) {
@@ -114,7 +114,7 @@ export const GamePage = () => {
   }, [gameId]);
 
   function startNewGame() {
-    if (connection && connection.connectionStarted) {
+    if (connection && connection._connectionStarted) {
       try {
         connection.send("StartNewGame", gameId);
       } catch (e) {
@@ -129,9 +129,9 @@ export const GamePage = () => {
       (player) => player.id === localStorage.getItem("userId")
     );
     const isFinished = roomDto.gameState.winner !== null;
-
+    console.log(roomDto);
     //Перезапуск игры
-    if (!isFinished && isWaitingForNewGame) isWaitingForNewGame(false);
+    // if (!isFinished && isWaitingForNewGame) isWaitingForNewGame(false);
 
     if (isFinished) {
       setIsGameFinished(true);
@@ -139,9 +139,10 @@ export const GamePage = () => {
       sendMessage(`Победил(а) ${room.gameState.winner} урааа!!!`);
     } else setIsGameFinished(false);
 
-    isGameStarted && isPlayer && !isFinished
-      ? setIsPlayingTheGame(true)
-      : setIsPlayingTheGame(false);
+    if (isGameStarted && isPlayer && !isFinished) {
+      setIsPlayingTheGame(true);
+      setIsWaitingForResult(false);
+    } else setIsPlayingTheGame(false);
 
     isGameStarted && !isPlayer && !isFinished
       ? setIsWatchingTheGame(true)
@@ -179,8 +180,9 @@ export const GamePage = () => {
   };
 
   const joinToGame = async () => {
-    if (connection.connectionStarted) {
+    if (connection && connection._connectionStarted) {
       try {
+        console.log("jointogame");
         await connection.send("JoinToGame", room, gameId);
       } catch (e) {
         console.log(e);
@@ -200,7 +202,7 @@ export const GamePage = () => {
   };
 
   const sendDataToHub = async (move) => {
-    if (connection.connectionStarted) {
+    if (connection._connectionStarted) {
       try {
         await connection.send("Move", move, gameId);
       } catch (e) {

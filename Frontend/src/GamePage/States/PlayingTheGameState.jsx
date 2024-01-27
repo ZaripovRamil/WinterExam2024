@@ -15,9 +15,9 @@ export const PlayingTheGameState = ({
 
   useEffect(() => {
     if (counter === 0) {
-      sendDataToHub(moveNumb);
       setIsWaitingForResult(true);
       setIsPlayingTheGame(false);
+      sendDataToHub(moveNumb);
     }
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
   }, [counter]);

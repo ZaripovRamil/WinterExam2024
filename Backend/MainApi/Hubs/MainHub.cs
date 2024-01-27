@@ -10,7 +10,7 @@ using WinterExam24.Features.Moves;
 
 namespace WinterExam24.Hubs;
 
-[Authorize]
+[Authorize(AuthenticationSchemes ="Bearer")]
 public class MainHub : Hub
 {
     public MainHub(IRoomRepository roomRepository, IMapper mapper, IUserRepository users, IGameResultCalculator gameResultCalculator, IBus bus)
