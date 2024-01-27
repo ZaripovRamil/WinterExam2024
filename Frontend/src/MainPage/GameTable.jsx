@@ -63,7 +63,7 @@ const GameTable = () => {
         </tr>
         {console.log(games)}
         {games.map((val, key) => {
-          const path = "/games/" + val.gameId;
+          const path = "/games/" + val.id;
           return (
             <tr key={key}>
               <td>{val.ownerName ? val.ownerName : "anonimous"}</td>

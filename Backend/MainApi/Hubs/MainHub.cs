@@ -55,8 +55,9 @@ public class MainHub : Hub
         }
     }
     
-    public async Task SendChatMessage(string message, string userName, string groupName) {
-        await Clients.Group(groupName).SendAsync("ReceiveChatMessage", message, userName);
+    public async Task SendChatMessage(string message, string groupName) {
+        var user = await _users.FindByClaimAsync(Context.User!);
+        await Clients.Group(groupName).SendAsync("ReceiveChatMessage", message, user.UserName);
     }
 
     public async Task Move(int move, string groupName)
