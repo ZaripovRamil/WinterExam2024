@@ -94,7 +94,8 @@ public class UserRepository : Repository, IUserRepository
 
     public async Task<User?> FindByClaimAsync(ClaimsPrincipal claim)
     {
-        return _mapper.Map<UserDbo?, User?>(await _userManager.GetUserAsync(claim));
+        var id = claim.Claims.First(c => c.Type == "Id").Value;
+        return _mapper.Map<UserDbo?, User?>(await _userManager.FindByIdAsync(id));
     }
 
     public async Task<SignInResult> SignInAsync(string username, string password)

@@ -10,7 +10,11 @@ public static class AddJwtAuthorizationExtension
 {
     public static IServiceCollection AddJwtAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.AddAuthentication( options => {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(opts =>
             {
                 opts.RequireHttpsMetadata = false;
@@ -25,6 +29,19 @@ public static class AddJwtAuthorizationExtension
                     IssuerSigningKey =
                         new SymmetricSecurityKey(
                             Encoding.ASCII.GetBytes(configuration["JWTTokenSettings:Key"]!))
+                };
+                opts.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        if (!string.IsNullOrEmpty(accessToken))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
         

@@ -8,8 +8,8 @@ using InputDto = WinterExam24.Features.Rooms.Create.InputDto;
 using ResultDto = WinterExam24.Features.Rooms.GetList.ResultDto;
 
 namespace WinterExam24.Controllers;
-
-[Authorize]
+// [Authorize]
+[Authorize(AuthenticationSchemes ="Bearer")]
 [ApiController]
 [Route("games")]
 public class RoomController : Controller

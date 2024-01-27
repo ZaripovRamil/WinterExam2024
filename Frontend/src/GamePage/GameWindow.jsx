@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { getFetcher } from "../axios/AxiosInstance";
 import Ports from "../constants/Ports";
 import { useNavigate } from "react-router-dom";
-import { HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnectionBuilder, HttpTransportType } from "@microsoft/signalr";
 import { JoinErrorState } from "./States/JoinErrorState";
 import { WaitingForOpponentState } from "./States/WaitingForOpponentState";
 import { EnableToJoinState } from "./States/EnableToJoinState";
@@ -16,27 +16,11 @@ import { WaitingForNewGameState } from "./States/WaitingForNewGameState";
 
 const fetcher = getFetcher(Ports.WebApi);
 
-const data = {
-  id: "123456",
-  gameState: {
-    moves: {
-      1111: 0,
-      2222: 0,
-    },
-    winner: { id: "1112", raiting: 2, username: "kamilla" },
-  },
-  players: [
-    // { id: "1111", raiting: 2, username: "kamilla" },
-    { id: "1112", raiting: 2, username: "kamilla" },
-  ],
-  errorCode: 0,
-};
-
 export const GameWindow = () => {
   const [connection, setConnection] = useState(null);
   const navigate = useNavigate();
   const { gameId } = useParams();
-  const [room, setRoom] = useState(data);
+  const [room, setRoom] = useState({});
   const [isJoinError, setIsJoinError] = useState(false);
   const [isWaitingForOpponent, setIsWaitingForOpponent] = useState(false);
   const [isEnableToJoin, setIsEnableToJoin] = useState(false);
@@ -47,8 +31,13 @@ export const GameWindow = () => {
   const [isWaitingForNewGame, setIsWaitingForNewGame] = useState(false);
 
   useEffect(() => {
+    const authToken = localStorage.getItem("access-token") ?? "";
     const newConnection = new HubConnectionBuilder()
-      .withUrl(`https://localhost:${Ports.WebApi}/room`)
+      .withUrl(`https://localhost:${Ports.WebApi}/room`, {
+        transport: HttpTransportType.WebSockets,
+        skipNegotiation: true,
+        accessTokenFactory: () => `${authToken}`,
+      })
       .withAutomaticReconnect()
       .build();
 
@@ -65,53 +54,51 @@ export const GameWindow = () => {
           console.log("Connected!");
 
           try {
+            console.log(gameId);
             connection.send("Enter", gameId);
           } catch (e) {
             console.log(e);
           }
-
-          connection.on("Receive", (roomDto) => {
-            if (validateErrorCode(roomDto.errorCode)) {
-              setRoom(roomDto);
-              changeStates(roomDto);
-            }
-          });
-          connection.on("ReopenRoom", (roomDto) => {
-            if (validateErrorCode(roomDto.errorCode)) {
-              setRoom(roomDto);
-              changeStates(roomDto);
-            }
-          });
         })
         .catch((e) => console.log("Connection failed: ", e));
+
+      connection.on("Receive", (roomDto) => {
+        console.log(roomDto);
+        if (validateStatusCode(roomDto.statusCode)) {
+          changeStates(roomDto);
+          setRoom(roomDto);
+        }
+      });
+      connection.on("ReopenRoom", (roomDto) => {
+        if (validateStatusCode(roomDto.statusCode)) {
+          setRoom(roomDto);
+          changeStates(roomDto);
+        }
+      });
     }
   }, [connection]);
 
-  useEffect(() => {}, [isJoinError, isWaitingForResult, room]);
+  useEffect(() => {}, [isJoinError, room]);
 
   useEffect(() => {
-    if (connection.connectionStarted) {
+    if (connection && connection.connectionStarted) {
       try {
         connection.send("ExitTheGame", gameId);
       } catch (e) {
         console.log(e);
       }
-    } else {
-      alert("No connection to server yet.");
     }
   }, [gameId]);
 
-  useEffect(() => {
-    if (connection.connectionStarted) {
+  function startNewGame() {
+    if (connection && connection.connectionStarted) {
       try {
         connection.send("StartNewGame", gameId);
       } catch (e) {
         console.log(e);
       }
-    } else {
-      alert("No connection to server yet.");
     }
-  }, [isWaitingForNewGame]);
+  }
 
   function changeStates(roomDto) {
     const isGameStarted = roomDto.players.length === 2;
@@ -145,10 +132,10 @@ export const GameWindow = () => {
       : setIsEnableToJoin(false);
   }
 
-  function validateErrorCode(errorCode) {
-    if (errorCode === 401) navigate("/authorize");
-    else if (errorCode === 404) navigate("/notFound");
-    else if (errorCode === 400) {
+  function validateStatusCode(statusCode) {
+    if (statusCode === 401) navigate("/authorize");
+    else if (statusCode === 404) navigate("/notFound");
+    else if (statusCode === 400) {
       setIsJoinError(true);
       return false;
     }
@@ -220,6 +207,7 @@ export const GameWindow = () => {
             gameState={room.gameState}
             setIsWaitingForNewGame={setIsWaitingForNewGame}
             setIsGameFinished={setIsGameFinished}
+            startNewGame={startNewGame}
           />
         )}
         {isWaitingForNewGame && <WaitingForNewGameState />}

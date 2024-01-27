@@ -27,7 +27,7 @@ public class MainHub : Hub
     private readonly IMapper _mapper;
     private readonly IGameResultCalculator _gameResultCalculator;
     private readonly IBus _bus;
-    public async Task Enter(string username, string groupName)
+    public async Task Enter(string groupName)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         var roomId = Guid.Parse(groupName);
@@ -92,7 +92,8 @@ public class MainHub : Hub
                         await _bus.Publish(new UserRatingDbo { UserId = player.Id, Rating = player.Rating + 3 });
                     else await _bus.Publish(new UserRatingDbo { UserId = player.Id, Rating = player.Rating + - 1 });
                 }
-            await Clients.Group(groupName).SendAsync("ReceiveChatMessage", _mapper.Map<Room,RoomDto>(room));
+            await Clients.Client(Context.ConnectionId).SendAsync("Receive",  _mapper.Map<Room,RoomDto>(room));
+            //await Clients.Group(groupName).SendAsync("ReceiveChatMessage", _mapper.Map<Room,RoomDto>(room));
             room.GameState = new GameState();
         }
             

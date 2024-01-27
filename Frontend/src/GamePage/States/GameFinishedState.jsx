@@ -13,6 +13,7 @@ export const GameFinishedState = ({
   gameState,
   setIsWaitingForNewGame,
   setIsGameFinished,
+  startNewGame,
 }) => {
   const [counter, setCounter] = useState(100);
 
@@ -20,6 +21,7 @@ export const GameFinishedState = ({
     if (counter === 0) {
       setIsWaitingForNewGame(true);
       setIsGameFinished(false);
+      startNewGame();
     }
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
   }, [counter]);

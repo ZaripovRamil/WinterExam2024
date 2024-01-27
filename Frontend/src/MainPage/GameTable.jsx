@@ -9,26 +9,6 @@ import axios from "axios";
 const fetcher = getFetcher(Ports.WebApi);
 const LIMIT = 10;
 
-const data = [
-  {
-    ownerName: "Anom",
-    gameCreated: "25.01.2024",
-    gameId: "123456",
-    gameStarted: true,
-  },
-  {
-    ownerName: "Kamilla",
-    gameCreated: "25.01.2024",
-    gameId: "123456",
-    gameStarted: false,
-  },
-  {
-    ownerName: "Anom",
-    gameCreated: "25.01.2024",
-    gameId: "123456",
-    gameStarted: true,
-  },
-];
 const GameTable = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -41,13 +21,8 @@ const GameTable = () => {
 
   const fetchData = async (page) => {
     const authToken = localStorage.getItem("access-token") ?? "";
-    // await axios
     fetcher
       .get("games", { params: { limit: LIMIT, page: page } })
-      // .get(`https://localhost:${Ports.WebApi}/games`, {
-      //   headers: { Authorization: `Bearer ${authToken}` },
-      //   params: { limit: LIMIT, page: page },
-      // })
       .then((data) => {
         setGames((prevItems) => [...prevItems, ...data.data]);
         setPage((prevPage) => prevPage + 1);
@@ -59,22 +34,6 @@ const GameTable = () => {
       })
       .finally(setIsLoading(false));
   };
-
-  // const handlePrevPage = () => {
-  //   if (offset <= 0) {
-  //     return;
-  //   }
-
-  //   setOffset(offset - LIMIT);
-  // };
-
-  // const handleNextPage = () => {
-  //   if (offset + LIMIT >= totalCount) {
-  //     return;
-  //   }
-
-  //   setOffset(offset + LIMIT);
-  // };
 
   const handleScroll = () => {
     if (
@@ -107,10 +66,10 @@ const GameTable = () => {
           const path = "/games/" + val.gameId;
           return (
             <tr key={key}>
-              <td>{val.ownerName}</td>
-              <td>{val.gameCreated}</td>
-              <td>{val.gameId}</td>
-              <td>{val.gameStarted ? "Ожидает" : "В разгаре"}</td>
+              <td>{val.ownerName ? val.ownerName : "anonimous"}</td>
+              <td>{val.created}</td>
+              <td>{val.id.substring(0, 6)}</td>
+              <td>{val.players.length == 2 ? "В разгаре" : "Ожидает"}</td>
               <td>
                 <Link to={path} className="raw">
                   Войти
@@ -120,11 +79,6 @@ const GameTable = () => {
           );
         })}
       </table>
-      {/* Pagination controls
-      <div className="paginationButtons">
-        <button onClick={handlePrevPage}>Назад</button>
-        <button onClick={handleNextPage}>Вперед</button>
-      </div> */}
     </div>
   );
 };

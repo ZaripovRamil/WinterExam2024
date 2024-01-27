@@ -14,16 +14,18 @@ const Popup = (props) => {
     console.log(maxRating);
     fetcher
       .post("games", { maxRating: maxRating })
-      .then((res) => handleResult(res.data))
+      .then((res) => {
+        handleResult(res.data);
+      })
       .catch((err) => {
         if (err.response.status === 401) navigate("/authorize");
       });
   };
 
   const handleResult = (data) => {
-    console.log(data);
-    if (data && data.isSuccessful) {
-      navigate(`/game/${data.gameId}`);
+    console.log("gameid", data.gameId);
+    if (data) {
+      navigate(`/games/${data.gameId}`);
     }
   };
 

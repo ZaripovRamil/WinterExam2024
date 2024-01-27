@@ -37,7 +37,10 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             audience: _jwtTokenSettings.Audience,
             notBefore: now,
             claims: GetIdentity(user).Claims,
-            expires: now + TimeSpan.FromMinutes(_jwtTokenSettings.Lifetime) + TimeSpan.FromDays(14));
+            expires: now + TimeSpan.FromMinutes(_jwtTokenSettings.Lifetime) + TimeSpan.FromDays(14),
+            signingCredentials: new SigningCredentials(
+            new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtTokenSettings.Key)),
+            SecurityAlgorithms.HmacSha256));
 
         return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
