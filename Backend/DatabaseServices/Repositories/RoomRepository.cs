@@ -46,7 +46,7 @@ public class RoomRepository : Repository, IRoomRepository
 
     public async Task DeleteAsync(Room room)
     {
-        var dbo = await DbContext.Rooms.FindAsync(room.Id);
+        var dbo = RoomsWithIncludes().FirstOrDefault(dbo=> dbo.Id == room.Id);
         if(dbo is null) return;
         DbContext.Rooms.Remove(dbo);
         await DbContext.SaveChangesAsync();
@@ -59,7 +59,7 @@ public class RoomRepository : Repository, IRoomRepository
 
     public async Task UpdateGameState(Guid roomId, GameState gameState)
     {
-        var dbo = await DbContext.Rooms.FindAsync(roomId);
+        var dbo = RoomsWithIncludes().FirstOrDefault(dbo=> dbo.Id == roomId);
         if (dbo is null) return;
         dbo.GameState = JsonSerializer.SerializeToDocument(gameState);
         await DbContext.SaveChangesAsync();
@@ -67,7 +67,7 @@ public class RoomRepository : Repository, IRoomRepository
     
     public async Task UpdatePlayers(Guid roomId, List<User> players)
     {
-        var dbo = await DbContext.Rooms.FindAsync(roomId);
+        var dbo = RoomsWithIncludes().FirstOrDefault(dbo=> dbo.Id == roomId);
         if (dbo is null) return;
         dbo.Players = players.Select(player => DbContext.Users.Find(player.Id)).ToList()!;
         await DbContext.SaveChangesAsync();
