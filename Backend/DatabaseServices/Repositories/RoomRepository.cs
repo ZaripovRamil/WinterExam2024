@@ -30,13 +30,13 @@ public class RoomRepository : Repository, IRoomRepository
         await DbContext.SaveChangesAsync();
     }
 
-    public async Task<Room?> GetAsync(Guid id)
+    public Task<Room?> GetAsync(Guid id)
     {
-        var dbo = await DbContext.Rooms.FindAsync(id);
+        var dbo = RoomsWithIncludes().FirstOrDefault(dbo=> dbo.Id == id);
         var room = _mapper.Map<RoomDbo?, Room?>(dbo);
         if(room != null)
             room.Players = _mapper.Map<List<UserDbo>, List<User>>(dbo.Players);
-        return room;
+        return Task.FromResult(room);
     }
 
     public Task<IEnumerable<Room>> GetAll()
