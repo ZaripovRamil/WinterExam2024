@@ -41,7 +41,7 @@ public class GameResultCalculator : IGameResultCalculator
             winningId = moves[1].Value == Move.Paper ? 0 : 1;
         }
 
-        room.GameState.WinnerUsername = moves[winningId].Key;
+        room.GameState.Winner = moves[winningId].Key;
     }
 
     private static void KickQuitPlayers(Room room)
