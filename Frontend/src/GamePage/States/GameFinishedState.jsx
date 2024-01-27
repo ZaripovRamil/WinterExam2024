@@ -53,7 +53,12 @@ export const GameFinishedState = ({
 
           return moves;
         })()}
-        <div className="centerEl">Выиграл(а) {gameState.winner}</div>;
+        {() => {
+          const message = gameState.winner
+            ? `Победил(а) ${gameState.winner}!!!`
+            : "Ничья";
+          return <div className="centerEl">{message}</div>;
+        }}
       </div>
     </>
   );

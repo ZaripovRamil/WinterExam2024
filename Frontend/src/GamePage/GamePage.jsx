@@ -76,8 +76,8 @@ export const GamePage = () => {
       });
       connection.on("ReopenRoom", (roomDto) => {
         if (validateStatusCode(roomDto.statusCode)) {
-          setRoom(roomDto);
           changeStates(roomDto);
+          setRoom(roomDto);
         }
       });
       connection.on("ReceiveChatMessage", (message, username) => {
@@ -128,7 +128,7 @@ export const GamePage = () => {
     const isPlayer = roomDto.players.find(
       (player) => player.id === localStorage.getItem("userId")
     );
-    const isFinished = roomDto.gameState.winner !== null;
+    const isFinished = roomDto.gameState.moves.length === 2;
     console.log(roomDto);
     //Перезапуск игры
     // if (!isFinished && isWaitingForNewGame) isWaitingForNewGame(false);
@@ -136,7 +136,10 @@ export const GamePage = () => {
     if (isFinished) {
       setIsGameFinished(true);
       setIsWaitingForResult(false);
-      sendMessage(`Победил(а) ${room.gameState.winner} урааа!!!`);
+      const message = room.gameState.winner
+        ? `Победил(а) ${room.gameState.winner} урааа!!!`
+        : "Ничья";
+      sendMessage(message);
     } else setIsGameFinished(false);
 
     if (isGameStarted && isPlayer && !isFinished) {
