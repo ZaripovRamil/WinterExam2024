@@ -82,7 +82,7 @@ public class MainHub : Hub
         if (room.GameState.Moves.Count == 2)
         {
             _gameResultCalculator.UpdateRoomWithGameResult(room);
-            if(room.GameState.WinnerUsername == "")
+            if(room.GameState.Winner == "")
                 foreach (var player in room.Players)
                 {
                     await _bus.Publish(new UserRatingDbo() { UserId = player.Id, Rating = player.Rating + 1 });
@@ -90,7 +90,7 @@ public class MainHub : Hub
             else 
                 foreach (var player in room.Players)
                 {
-                    if(player.UserName == room.GameState.WinnerUsername)
+                    if(player.UserName == room.GameState.Winner)
                         await _bus.Publish(new UserRatingDbo { UserId = player.Id, Rating = player.Rating + 3 });
                     else await _bus.Publish(new UserRatingDbo { UserId = player.Id, Rating = player.Rating + - 1 });
                 }
