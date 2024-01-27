@@ -50,7 +50,7 @@ builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient("mongodb://host
 builder.Services.AddSingleton<IMongoDatabase, MongoDatabase>();
 builder.Services.AddSingleton(config.CreateMapper());
 builder.Services.AddApplicationServices(builder.Configuration);
-//builder.Services.AddHostedService<RoomCleaner>();
+// builder.Services.AddHostedService<RoomCleaner>();
 builder.Services.AddRequestHandlers();
 
 builder.Services.AddControllers();

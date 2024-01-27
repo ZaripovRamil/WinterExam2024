@@ -37,7 +37,6 @@ public class MainHub : Hub
         else
             await Clients.Group(groupName).SendAsync("Receive", _mapper.Map<Room, RoomDto>(room));
     }
-
     public async Task JoinToGame(RoomDto roomDto, string groupName)
     {
         var roomId = Guid.Parse(groupName);
@@ -94,10 +93,15 @@ public class MainHub : Hub
                         await _bus.Publish(new UserRatingDbo { UserId = player.Id, Rating = player.Rating + 3 });
                     else await _bus.Publish(new UserRatingDbo { UserId = player.Id, Rating = player.Rating + - 1 });
                 }
-            await Clients.Client(Context.ConnectionId).SendAsync("Receive",  _mapper.Map<Room,RoomDto>(room));
-            //await Clients.Group(groupName).SendAsync("ReceiveChatMessage", _mapper.Map<Room,RoomDto>(room));
+            await Clients.Group(groupName).SendAsync("Receive",  _mapper.Map<Room,RoomDto>(room));
+            
+            var message = room.GameState.Winner != "" ? $"Победил(а) {room.GameState.Winner} урааа!!!" : "Ничья!!!";
+            await Clients.Group(groupName).SendAsync("ReceiveChatMessage", message, "Результат игры:");
+            
             room.GameState = new GameState();
             await _rooms.UpdateGameState(room.Id, room.GameState);
+            await _rooms.UpdatePlayers(room.Id,room.Players);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
             
     }

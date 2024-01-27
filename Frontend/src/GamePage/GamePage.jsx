@@ -57,9 +57,7 @@ export const GamePage = () => {
         .start()
         .then((result) => {
           console.log("Connected!");
-
           try {
-            console.log(gameId);
             connection.send("Enter", gameId);
           } catch (e) {
             console.log(e);
@@ -70,8 +68,8 @@ export const GamePage = () => {
       connection.on("Receive", (roomDto) => {
         console.log("receive", roomDto);
         if (validateStatusCode(roomDto.statusCode)) {
-          changeStates(roomDto);
           setRoom(roomDto);
+          changeStates(roomDto);
         }
       });
       connection.on("ReopenRoom", (roomDto) => {
@@ -81,7 +79,6 @@ export const GamePage = () => {
         }
       });
       connection.on("ReceiveChatMessage", (message, username) => {
-        console.log("pupupu");
         const updatedChat = [...latestChat.current];
         updatedChat.push({ message: message, username: username });
         setChat(updatedChat);
@@ -106,7 +103,7 @@ export const GamePage = () => {
   useEffect(() => {
     if (connection && connection._connectionStarted) {
       try {
-        connection.send("ExitTheGame", gameId);
+        connection.send("Enter", gameId);
       } catch (e) {
         console.log(e);
       }
@@ -114,37 +111,52 @@ export const GamePage = () => {
   }, [gameId]);
 
   function startNewGame() {
+    console.log("start new game", room);
     if (connection && connection._connectionStarted) {
       try {
-        connection.send("StartNewGame", gameId);
+        connection.send("Enter", gameId);
       } catch (e) {
         console.log(e);
       }
     }
   }
 
+  function resetAllStates() {
+    setIsJoinError(false);
+    setIsWaitingForOpponent(false);
+    setIsEnableToJoin(false);
+    setIsPlayingTheGame(false);
+    setIsWatchingTheGame(false);
+    setIsWaitingForResult(false);
+    setIsGameFinished(false);
+    setIsWaitingForNewGame(false);
+  }
+
   function changeStates(roomDto) {
+    resetAllStates();
     const isGameStarted = roomDto.players.length === 2;
     const isPlayer = roomDto.players.find(
       (player) => player.id === localStorage.getItem("userId")
     );
-    const isFinished = roomDto.gameState.moves.length === 2;
-    console.log(roomDto);
+    const isFinished = Object.keys(roomDto.gameState.moves).length === 2;
     //Перезапуск игры
-    // if (!isFinished && isWaitingForNewGame) isWaitingForNewGame(false);
+    if (!isFinished && isWaitingForNewGame) isWaitingForNewGame(false);
 
     if (isFinished) {
+      setRoom(roomDto);
       setIsGameFinished(true);
       setIsWaitingForResult(false);
-      const message = room.gameState.winner
-        ? `Победил(а) ${room.gameState.winner} урааа!!!`
-        : "Ничья";
-      sendMessage(message);
+      // const message =
+      //   roomDto.gameState.winner !== ""
+      //     ? `Победил(а) ${roomDto.gameState.winner} урааа!!!`
+      //     : "Ничья";
+      // sendMessage(message);
     } else setIsGameFinished(false);
 
-    if (isGameStarted && isPlayer && !isFinished) {
+    if (isGameStarted && isPlayer && !isFinished && !isWaitingForResult) {
       setIsPlayingTheGame(true);
       setIsWaitingForResult(false);
+      setIsWaitingForNewGame(false);
     } else setIsPlayingTheGame(false);
 
     isGameStarted && !isPlayer && !isFinished
@@ -185,7 +197,6 @@ export const GamePage = () => {
   const joinToGame = async () => {
     if (connection && connection._connectionStarted) {
       try {
-        console.log("jointogame");
         await connection.send("JoinToGame", room, gameId);
       } catch (e) {
         console.log(e);
@@ -205,6 +216,7 @@ export const GamePage = () => {
   };
 
   const sendDataToHub = async (move) => {
+    console.log("send data");
     if (connection._connectionStarted) {
       try {
         await connection.send("Move", move, gameId);
@@ -217,31 +229,33 @@ export const GamePage = () => {
   };
 
   return (
-    <main className="main-game">
-      <div className="window gameWindow">
-        {isJoinError && <JoinErrorState />}
-        {isWaitingForOpponent && <WaitingForOpponentState />}
-        {isEnableToJoin && <EnableToJoinState joinToGame={joinToGame} />}
-        {isPlayingTheGame && (
-          <PlayingTheGameState
-            sendDataToHub={sendDataToHub}
-            setIsWaitingForResult={setIsWaitingForResult}
-            setIsPlayingTheGame={setIsPlayingTheGame}
-          />
-        )}
-        {isWatchingTheGame && <WatchingTheGameState room={room} />}
-        {isWaitingForResult && <WaitingForResultState />}
-        {isGameFinished && (
-          <GameFinishedState
-            gameState={room.gameState}
-            setIsWaitingForNewGame={setIsWaitingForNewGame}
-            setIsGameFinished={setIsGameFinished}
-            startNewGame={startNewGame}
-          />
-        )}
-        {isWaitingForNewGame && <WaitingForNewGameState />}
-      </div>
-      <ChatWindow chat={chat} sendMessage={sendMessage} />
-    </main>
+    <>
+      <main className="main-game">
+        <div className="window gameWindow">
+          {isJoinError && <JoinErrorState />}
+          {isWaitingForOpponent && <WaitingForOpponentState />}
+          {isEnableToJoin && <EnableToJoinState joinToGame={joinToGame} />}
+          {isPlayingTheGame && (
+            <PlayingTheGameState
+              sendDataToHub={sendDataToHub}
+              setIsWaitingForResult={setIsWaitingForResult}
+              setIsPlayingTheGame={setIsPlayingTheGame}
+            />
+          )}
+          {isWatchingTheGame && <WatchingTheGameState room={room} />}
+          {isWaitingForResult && <WaitingForResultState />}
+          {isGameFinished && (
+            <GameFinishedState
+              gameState={room.gameState}
+              setIsWaitingForNewGame={setIsWaitingForNewGame}
+              setIsGameFinished={setIsGameFinished}
+              startNewGame={startNewGame}
+            />
+          )}
+          {isWaitingForNewGame && <WaitingForNewGameState />}
+        </div>
+        <ChatWindow chat={chat} sendMessage={sendMessage} />
+      </main>
+    </>
   );
 };

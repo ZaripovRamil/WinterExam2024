@@ -55,6 +55,7 @@
   flex-direction: column;
   text-align: center;
   justify-content: space-between;
+  height: 100%;
 }
 
 .move:hover {

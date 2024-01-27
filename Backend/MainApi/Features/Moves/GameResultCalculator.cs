@@ -47,5 +47,6 @@ public class GameResultCalculator : IGameResultCalculator
     private static void KickQuitPlayers(Room room)
     {
         room.Players = room.Players.Where(player => room.GameState.Moves[player.UserName!] != Move.None).ToList();
+        
     }
 }
