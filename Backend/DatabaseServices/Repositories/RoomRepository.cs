@@ -2,6 +2,8 @@ using System.Text.Json;
 using AutoMapper;
 using Contracts.Dbo;
 using Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Models;
 
 namespace DatabaseServices.Repositories;
@@ -31,12 +33,15 @@ public class RoomRepository : Repository, IRoomRepository
     public async Task<Room?> GetAsync(Guid id)
     {
         var dbo = await DbContext.Rooms.FindAsync(id);
-        return _mapper.Map<RoomDbo?, Room?>(dbo);
+        var room = _mapper.Map<RoomDbo?, Room?>(dbo);
+        if(room != null)
+            room.Players = _mapper.Map<List<UserDbo>, List<User>>(dbo.Players);
+        return room;
     }
 
     public Task<IEnumerable<Room>> GetAll()
     {
-        return Task.FromResult(_mapper.Map<IEnumerable<RoomDbo>, IEnumerable<Room>>(DbContext.Rooms));
+        return Task.FromResult(_mapper.Map<IEnumerable<RoomDbo>, IEnumerable<Room>>(RoomsWithIncludes()));
     }
 
     public async Task DeleteAsync(Room room)
@@ -66,5 +71,10 @@ public class RoomRepository : Repository, IRoomRepository
         if (dbo is null) return;
         dbo.Players = players.Select(player => DbContext.Users.Find(player.Id)).ToList()!;
         await DbContext.SaveChangesAsync();
+    }
+
+    public IIncludableQueryable<RoomDbo, List<UserDbo>> RoomsWithIncludes()
+    {
+        return DbContext.Rooms.Include(r => r.Players);
     }
 }

@@ -20,11 +20,10 @@ public class CommandHandler : ICommandHandler<Command, ResultDto>
 
     public async Task<Result<ResultDto>> Handle(Command request, CancellationToken cancellationToken)
     {
-        
         var room = new Room() { Players = new List<User> { (await _users.GetAsync(request.CreatorId))! }, 
             Id = Guid.NewGuid(), 
             GameState = new GameState(),
-            Created = DateTime.Now
+            Created = DateTime.Now.ToUniversalTime()
         };
         await _rooms.AddAsync(room);
         

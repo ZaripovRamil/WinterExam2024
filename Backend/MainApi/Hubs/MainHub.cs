@@ -77,6 +77,7 @@ public class MainHub : Hub
         }
         var parsedMove = (Common.Move)move;
         room.GameState.Moves.Add(user!.UserName!, parsedMove);
+        await _rooms.UpdateGameState(room.Id, room.GameState);
         if (room.GameState.Moves.Count == 2)
         {
             _gameResultCalculator.UpdateRoomWithGameResult(room);
@@ -95,6 +96,7 @@ public class MainHub : Hub
             await Clients.Client(Context.ConnectionId).SendAsync("Receive",  _mapper.Map<Room,RoomDto>(room));
             //await Clients.Group(groupName).SendAsync("ReceiveChatMessage", _mapper.Map<Room,RoomDto>(room));
             room.GameState = new GameState();
+            await _rooms.UpdateGameState(room.Id, room.GameState);
         }
             
     }
