@@ -13,13 +13,15 @@ export const GameFinishedState = ({
   gameState,
   setIsWaitingForNewGame,
   setIsGameFinished,
+  startNewGame,
 }) => {
-  const [counter, setCounter] = useState(100);
+  const [counter, setCounter] = useState(10);
 
   useEffect(() => {
     if (counter === 0) {
       setIsWaitingForNewGame(true);
       setIsGameFinished(false);
+      startNewGame();
     }
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
   }, [counter]);
@@ -30,7 +32,7 @@ export const GameFinishedState = ({
         <div className="timer"> {counter}</div>
         {(() => {
           const moves = [];
-
+          console.log(gameState);
           for (let key in gameState.moves) {
             if (gameState.moves[key] === 0)
               moves.push(
@@ -51,7 +53,13 @@ export const GameFinishedState = ({
 
           return moves;
         })()}
-        <div className="centerEl">Выиграл(а) {gameState.winner}</div>;
+        {() => {
+          const message =
+            gameState.winner !== ""
+              ? `Победил(а) ${gameState.winner}!!!`
+              : "Ничья";
+          return <div className="centerEl">{message}</div>;
+        }}
       </div>
     </>
   );

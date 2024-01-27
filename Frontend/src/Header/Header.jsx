@@ -21,7 +21,7 @@ export const Header = () => {
           to={localStorage.getItem("access-token") ? "/logout" : "/authorize"}
         >
           {localStorage.getItem("access-token") ? (
-            <div className="div">Выход</div>
+            <div className="div"></div>
           ) : (
             <div className="div">Вход</div>
           )}

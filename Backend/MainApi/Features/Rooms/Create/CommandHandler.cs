@@ -22,8 +22,11 @@ public class CommandHandler : ICommandHandler<Command, ResultDto>
     {
         var room = new Room() { Players = new List<User> { (await _users.GetAsync(request.CreatorId))! }, 
             Id = Guid.NewGuid(), 
-            GameState = new GameState()};
+            GameState = new GameState(),
+            Created = DateTime.Now.ToUniversalTime()
+        };
         await _rooms.AddAsync(room);
+        
         return new Result<ResultDto>(new ResultDto() { GameId = room.Id });
     }
 }
